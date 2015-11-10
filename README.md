@@ -114,4 +114,4 @@ SJURLSessionOperation is available under the MIT license. See the [LICENSE](LICE
 
 --------
 ###### Published in the hope that it will be useful
-##### Please feel free to open a pull request
+###### Please feel free to open a pull request
