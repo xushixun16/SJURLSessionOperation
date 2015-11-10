@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
 # ―――  Spec Metadata  ―――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
 s.name         = "SJURLSessionOperation"
-s.version      = "1.0.0"
+s.version      = "1.0.1"
 s.summary      = "NSOperation solution for NSURLSession."
 
 s.description  = <<-DESC
