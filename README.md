@@ -97,7 +97,7 @@ SJURLSessionOperation *operation = [[SJURLSessionOperation alloc]initWithRequest
     
 ```
 
-## Credits
+## Acknowledgments
 
 A lot of the source code in *SJURLSessionOperation* is inspired by the [AFNetworking ](https://github.com/AFNetworking/AFNetworking)
 
@@ -107,8 +107,6 @@ Soneé John
 
 - https://twitter.com/Sonee_John
 - https://github.com/SoneeJohn
-
-## Acknowledgments
 
 SJURLSessionOperation is available under the MIT license. See the [LICENSE](LICENSE) file for more information.
 
