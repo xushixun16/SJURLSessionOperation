@@ -44,8 +44,6 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination NS_DESIGNATED_INITIALIZER;
 
-- (instancetype)init NS_UNAVAILABLE;
-
 ///------------------------------------
 /// @name Pausing / Resuming Operations
 ///------------------------------------
@@ -83,7 +81,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param block A block to be executed when a task finishes. This block has no return value and takes four arguments: the operation, the error describing the network or parsing error that occurred, if any, the path of the downloaded file, and the server response.
  */
-- (void)setDownloadCompletionBlock:(nullable void (^)(SJURLSessionOperation *operation, NSError *error, NSURL *fileURL, NSURLResponse *response))block;
+- (void)setDownloadCompletionBlock:(nullable void (^)(SJURLSessionOperation *_Nullable operation, NSError *_Nullable error, NSURL *_Nullable fileURL, NSURLResponse *_Nullable response))block;
 
 ///-----------------------------------------
 /// @name Getting Information
