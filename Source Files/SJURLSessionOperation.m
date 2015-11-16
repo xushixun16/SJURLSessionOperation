@@ -135,6 +135,9 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 - (instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination{
     
+    NSParameterAssert(urlRequest);
+    NSParameterAssert(destination);
+    
     if (self == [super init]) {
         if (!self) {
             return nil;
