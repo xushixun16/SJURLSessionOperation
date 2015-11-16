@@ -201,7 +201,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     
     self.downloadProgress = block;
 }
-- (void)setCompletionBlock:(void (^)(SJURLSessionOperation *, NSError *, NSURL *, NSURLResponse *))block{
+- (void)setDownloadCompletionBlock:(void (^)(SJURLSessionOperation *, NSError *, NSURL *, NSURLResponse *))block{
     
     self.completion = block;
     

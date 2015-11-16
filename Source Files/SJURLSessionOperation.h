@@ -83,7 +83,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @param block A block to be executed when a task finishes. This block has no return value and takes four arguments: the operation, the error describing the network or parsing error that occurred, if any, the path of the downloaded file, and the server response.
  */
-- (void)setCompletionBlock:(nullable void (^)(SJURLSessionOperation *operation, NSError *error, NSURL *fileURL, NSURLResponse *response))block;
+- (void)setDownloadCompletionBlock:(nullable void (^)(SJURLSessionOperation *operation, NSError *error, NSURL *fileURL, NSURLResponse *response))block;
 
 ///-----------------------------------------
 /// @name Getting Information
