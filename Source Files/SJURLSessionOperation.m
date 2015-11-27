@@ -194,6 +194,16 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
                 }
                 
+            }else{
+                
+                [self finish];
+                self.error = error;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (self.completion) {
+                        self.completion(self, error, filePath, response);
+                    }
+                });
+                
             }
         }
         
@@ -216,7 +226,6 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
                 }
             });
         }else{
-            
             if([[error localizedDescription] rangeOfString:@"cancelled"].location != NSNotFound){
                 
                 if (_resumeData == nil) {
@@ -229,6 +238,16 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
                     });
                     
                 }
+                
+            }else{
+                
+                [self finish];
+                self.error = error;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (self.completion) {
+                        self.completion(self, error, filePath, response);
+                    }
+                });
                 
             }
         }
