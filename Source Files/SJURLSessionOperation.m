@@ -105,6 +105,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 @property (readwrite, nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
 
 @property (strong, nonatomic) AFURLSessionManager *manager;
+@property (strong, nonatomic) NSData *resumeData;
 
 @property (readwrite, nonatomic, strong) NSError *error;
 
@@ -118,7 +119,6 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 @property (readwrite, nonatomic, copy) SJURLSessionOperationProgressBlock downloadProgress;
 @property (readwrite, nonatomic, copy) SJURLSessionOperationCompletionBlock completion;
-
 
 
 - (void)finish;
@@ -170,15 +170,91 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
         return self.saveLocation;
         
     } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-        
-        [self finish];
-        self.error = error;
-        dispatch_async(dispatch_get_main_queue(), ^{
-        if (self.completion) {
-            self.completion(self, error, filePath, response);
+       
+        if (error == nil) {
+           
+            [self finish];
+            self.error = error;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (self.completion) {
+                    self.completion(self, error, filePath, response);
+                }
+            });
+        }else{
+            if(error.code == NSURLErrorCancelled){
+               
+                if (_resumeData == nil) {
+                    [self finish];
+                    self.error = error;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (self.completion) {
+                            self.completion(self, error, filePath, response);
+                        }
+                    });
+
+                }
+                
+            }else{
+                
+                [self finish];
+                self.error = error;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (self.completion) {
+                        self.completion(self, error, filePath, response);
+                    }
+                });
+                
+            }
         }
-        });
+        
     }];
+}
+
+-(void)registerResumeDataCompletionBlock{
+    
+    self.downloadTask = [self.manager downloadTaskWithResumeData:_resumeData progress:nil destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+        return self.saveLocation;
+    } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
+        
+        if (error == nil) {
+            
+            [self finish];
+            self.error = error;
+            dispatch_async(dispatch_get_main_queue(), ^{
+                if (self.completion) {
+                    self.completion(self, error, filePath, response);
+                }
+            });
+        }else{
+            if(error.code == NSURLErrorCancelled){
+                
+                if (_resumeData == nil) {
+                    [self finish];
+                    self.error = error;
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        if (self.completion) {
+                            self.completion(self, error, filePath, response);
+                        }
+                    });
+                    
+                }
+                
+            }else{
+                
+                [self finish];
+                self.error = error;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if (self.completion) {
+                        self.completion(self, error, filePath, response);
+                    }
+                });
+                
+            }
+        }
+    }];
+    if (self.downloadTask) {
+        [self.downloadTask resume];
+    }
 }
 
 -(void)registerDownloadTaskDidWriteDataBlock{
@@ -258,7 +334,9 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
         
         if(self.downloadTask){
             
-            [self.downloadTask suspend];
+            [self.downloadTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
+                _resumeData = resumeData;
+            }];
         
         dispatch_async(dispatch_get_main_queue(), ^{
             NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
@@ -301,7 +379,15 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
             [[NSNotificationCenter defaultCenter] postNotificationName:SJURLSessionOperationDidStartNotification object:self];
         });
         
-        [self.downloadTask resume];
+        if (_resumeData) {
+            
+            [self registerResumeDataCompletionBlock];
+        
+        }else{
+         
+         [self.downloadTask resume];
+            
+        }
     }
     
     [self.lock unlock];
@@ -310,6 +396,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 - (void)finish {
     
     [self.lock lock];
+    _resumeData = nil;
     self.state = SJURLSessionOperationFinishedState;
     [self.lock unlock];
     
