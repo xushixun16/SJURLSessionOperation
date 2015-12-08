@@ -181,8 +181,8 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
                 }
             });
         }else{
-            if([[error localizedDescription] rangeOfString:@"cancelled"].location != NSNotFound){
-                
+            if(error.code == NSURLErrorCancelled){
+               
                 if (_resumeData == nil) {
                     [self finish];
                     self.error = error;
@@ -226,7 +226,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
                 }
             });
         }else{
-            if([[error localizedDescription] rangeOfString:@"cancelled"].location != NSNotFound){
+            if(error.code == NSURLErrorCancelled){
                 
                 if (_resumeData == nil) {
                     [self finish];
