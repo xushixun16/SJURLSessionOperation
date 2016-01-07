@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)setDownloadProgressBlock:(nullable void (^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))block;
 
 /**
- *  Sets a callback to be called when 
+ *  Sets a callback to be called when operation finishes.
  *
  *  @param block A block to be executed when a task finishes. This block has no return value and takes four arguments: the operation, the error describing the network or parsing error that occurred, if any, the path of the downloaded file, and the server response.
  */
