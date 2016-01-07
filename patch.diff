@@ -1,0 +1,25 @@
+From d1cc0a5890fbbe22231e0b7bd11b4d5428bd4627 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Sone=C3=A9=20John?= <sonee@alphasoftware.co>
+Date: Thu, 7 Jan 2016 18:55:26 -0400
+Subject: [PATCH] Fix incomplete documentation
+
+---
+ Source Files/SJURLSessionOperation.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Source Files/SJURLSessionOperation.h b/Source Files/SJURLSessionOperation.h
+index 5973d1f..74e5dac 100644
+--- a/Source Files/SJURLSessionOperation.h	
++++ b/Source Files/SJURLSessionOperation.h	
+@@ -77,7 +77,7 @@ NS_ASSUME_NONNULL_BEGIN
+ - (void)setDownloadProgressBlock:(nullable void (^)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite))block;
+ 
+ /**
+- *  Sets a callback to be called when 
++ *  Sets a callback to be called when operation finishes.
+  *
+  *  @param block A block to be executed when a task finishes. This block has no return value and takes four arguments: the operation, the error describing the network or parsing error that occurred, if any, the path of the downloaded file, and the server response.
+  */
+-- 
+1.7.11.1
+
