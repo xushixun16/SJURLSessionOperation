@@ -91,6 +91,10 @@ NS_ASSUME_NONNULL_BEGIN
  The error, if any, that occurred in the lifecycle of the operation.
  */
 @property (readonly, nonatomic, strong, nullable) NSError *error;
+/**
+ *  The resume data for the operation. This value may be `nil`.
+ */
+@property (strong, nonatomic) NSData *resumeData;
 
 ///--------------------
 /// @name Notifications

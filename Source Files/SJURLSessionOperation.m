@@ -105,7 +105,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 @property (readwrite, nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
 
 @property (strong, nonatomic) AFURLSessionManager *manager;
-@property (strong, nonatomic) NSData *resumeData;
+
 
 @property (readwrite, nonatomic, strong) NSError *error;
 
