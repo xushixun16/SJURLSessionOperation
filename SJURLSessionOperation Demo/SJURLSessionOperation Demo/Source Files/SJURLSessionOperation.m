@@ -133,6 +133,13 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     return nil;
 }
 
+- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData{
+    
+    _operationResumeData = operationResumeData;
+    return [self initWithRequest:urlRequest targetLocation:destination];
+}
+
+
 - (instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination{
     
     NSParameterAssert(urlRequest);
@@ -182,11 +189,11 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
             });
         }else{
             
-            self.resumeData = [error.userInfo objectForKey:@"NSURLSessionDownloadTaskResumeData"]?:nil;
+            _operationResumeData = [error.userInfo objectForKey:@"NSURLSessionDownloadTaskResumeData"]?:nil;
             
             if(error.code == NSURLErrorCancelled){
                
-                if (_resumeData == nil) {
+                if (self.operationResumeData == nil) {
                     [self finish];
                     self.error = error;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -215,7 +222,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 -(void)registerResumeDataCompletionBlock{
     
-    self.downloadTask = [self.manager downloadTaskWithResumeData:_resumeData progress:nil destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+    self.downloadTask = [self.manager downloadTaskWithResumeData:self.operationResumeData progress:nil destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
         return self.saveLocation;
     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
         
@@ -230,11 +237,11 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
             });
         }else{
             
-            self.resumeData = [error.userInfo objectForKey:@"NSURLSessionDownloadTaskResumeData"]?:nil;
+            _operationResumeData = [error.userInfo objectForKey:@"NSURLSessionDownloadTaskResumeData"]?:nil;
             
             if(error.code == NSURLErrorCancelled){
                 
-                if (_resumeData == nil) {
+                if (self.operationResumeData == nil) {
                     [self finish];
                     self.error = error;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -341,7 +348,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
         if(self.downloadTask){
             
             [self.downloadTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
-                _resumeData = resumeData;
+                _operationResumeData = resumeData;
             }];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -385,7 +392,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
             [[NSNotificationCenter defaultCenter] postNotificationName:SJURLSessionOperationDidStartNotification object:self];
         });
         
-        if (_resumeData) {
+        if (self.operationResumeData) {
             
             [self registerResumeDataCompletionBlock];
         

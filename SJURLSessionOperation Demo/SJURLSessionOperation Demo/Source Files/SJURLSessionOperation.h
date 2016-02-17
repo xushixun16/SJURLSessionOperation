@@ -44,6 +44,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 - (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination NS_DESIGNATED_INITIALIZER;
 
+- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData;
+
+
 ///------------------------------------
 /// @name Pausing / Resuming Operations
 ///------------------------------------
@@ -94,7 +97,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The resume data for the operation. This value may be `nil`.
  */
-@property (strong, nonatomic) NSData *resumeData;
+@property (readonly, nonatomic, strong) NSData *operationResumeData;
 
 ///--------------------
 /// @name Notifications
