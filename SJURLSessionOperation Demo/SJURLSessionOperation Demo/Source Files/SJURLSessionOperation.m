@@ -24,12 +24,6 @@
 
 #import "SJURLSessionOperation.h"
 
-typedef NS_ENUM(NSInteger, SJURLSessionOperationState) {
-    SJURLSessionOperationPausedState      = -1,
-    SJURLSessionOperationReadyState       = 1,
-    SJURLSessionOperationExecutingState   = 2,
-    SJURLSessionOperationFinishedState    = 3,
-};
 
 static inline NSString * SJKeyPathFromOperationState(SJURLSessionOperationState state) {
     switch (state) {
@@ -113,7 +107,6 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 @property (readwrite, nonatomic, strong) NSURL *saveLocation;
 
-@property (readwrite, nonatomic, assign) SJURLSessionOperationState state;
 
 @property (readwrite, nonatomic, strong) NSRecursiveLock *lock;
 
@@ -154,7 +147,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     
         _manager = [[AFURLSessionManager alloc]initWithSessionConfiguration:config];
 
-        _state = SJURLSessionOperationReadyState;
+        _operationState = SJURLSessionOperationReadyState;
         
         self.saveLocation = destination;
         self.request = urlRequest;
@@ -301,17 +294,17 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 #pragma mark -
 - (void)setState:(SJURLSessionOperationState)state {
-    if (!SJStateTransitionIsValid(self.state, state, [self isCancelled])) {
+    if (!SJStateTransitionIsValid(self.operationState, state, [self isCancelled])) {
         return;
     }
     
     [self.lock lock];
-    NSString *oldStateKey = SJKeyPathFromOperationState(self.state);
+    NSString *oldStateKey = SJKeyPathFromOperationState(self.operationState);
     NSString *newStateKey = SJKeyPathFromOperationState(state);
     
     [self willChangeValueForKey:newStateKey];
     [self willChangeValueForKey:oldStateKey];
-    _state = state;
+    _operationState = state;
     [self didChangeValueForKey:oldStateKey];
     [self didChangeValueForKey:newStateKey];
     [self.lock unlock];
@@ -417,18 +410,18 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     });
 }
 - (BOOL)isPaused {
-    return self.state == SJURLSessionOperationPausedState;
+    return self.operationState == SJURLSessionOperationPausedState;
 }
 - (BOOL)isReady {
-    return self.state == SJURLSessionOperationReadyState && [super isReady];
+    return self.operationState == SJURLSessionOperationReadyState && [super isReady];
 }
 
 - (BOOL)isExecuting {
-    return self.state == SJURLSessionOperationExecutingState;
+    return self.operationState == SJURLSessionOperationExecutingState;
 }
 
 - (BOOL)isFinished {
-    return self.state == SJURLSessionOperationFinishedState
+    return self.operationState == SJURLSessionOperationFinishedState
     ;
 }
 
