@@ -189,7 +189,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
             });
         }else{
             
-            _operationResumeData = [error.userInfo objectForKey:@"NSURLSessionDownloadTaskResumeData"]?:nil;
+            _operationResumeData = [error.userInfo objectForKey:@"NSURLSessionDownloadTaskResumeData"];
             
             if(error.code == NSURLErrorCancelled){
                
@@ -237,7 +237,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
             });
         }else{
             
-            _operationResumeData = [error.userInfo objectForKey:@"NSURLSessionDownloadTaskResumeData"]?:nil;
+            _operationResumeData = [error.userInfo objectForKey:@"NSURLSessionDownloadTaskResumeData"];
             
             if(error.code == NSURLErrorCancelled){
                 
