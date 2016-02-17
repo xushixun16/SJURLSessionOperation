@@ -147,7 +147,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     
         _manager = [[AFURLSessionManager alloc]initWithSessionConfiguration:config];
 
-        _operationState = SJURLSessionOperationReadyState;
+        _state = SJURLSessionOperationReadyState;
         
         self.saveLocation = destination;
         self.request = urlRequest;
@@ -294,17 +294,17 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 #pragma mark -
 - (void)setState:(SJURLSessionOperationState)state {
-    if (!SJStateTransitionIsValid(self.operationState, state, [self isCancelled])) {
+    if (!SJStateTransitionIsValid(self.state, state, [self isCancelled])) {
         return;
     }
     
     [self.lock lock];
-    NSString *oldStateKey = SJKeyPathFromOperationState(self.operationState);
+    NSString *oldStateKey = SJKeyPathFromOperationState(self.state);
     NSString *newStateKey = SJKeyPathFromOperationState(state);
     
     [self willChangeValueForKey:newStateKey];
     [self willChangeValueForKey:oldStateKey];
-    _operationState = state;
+    _state = state;
     [self didChangeValueForKey:oldStateKey];
     [self didChangeValueForKey:newStateKey];
     [self.lock unlock];
@@ -410,18 +410,18 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     });
 }
 - (BOOL)isPaused {
-    return self.operationState == SJURLSessionOperationPausedState;
+    return self.state == SJURLSessionOperationPausedState;
 }
 - (BOOL)isReady {
-    return self.operationState == SJURLSessionOperationReadyState && [super isReady];
+    return self.state == SJURLSessionOperationReadyState && [super isReady];
 }
 
 - (BOOL)isExecuting {
-    return self.operationState == SJURLSessionOperationExecutingState;
+    return self.state == SJURLSessionOperationExecutingState;
 }
 
 - (BOOL)isFinished {
-    return self.operationState == SJURLSessionOperationFinishedState
+    return self.state == SJURLSessionOperationFinishedState
     ;
 }
 

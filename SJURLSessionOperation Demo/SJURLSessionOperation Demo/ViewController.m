@@ -50,6 +50,8 @@
             [self registerCompletionBlockForOperation:self.operation];
             [self registerProgressBlockForOperation:self.operation];
             
+            [self.operation addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:NULL];
+
             [self.operation start];
             
         }
@@ -72,6 +74,49 @@
 - (IBAction)cancelAction:(id)sender {
     
     [self.operation cancel];
+}
+
+#pragma mark - Key-Value Observing (KVO)
+- (NSString*)nameOfState:(SJURLSessionOperationState)state {
+    switch (state) {
+        case SJURLSessionOperationExecutingState:
+            return @"SJURLSessionOperationExecutingState";
+            break;
+        case SJURLSessionOperationFinishedState:
+            return @"SJURLSessionOperationFinishedState";
+            break;
+        case SJURLSessionOperationPausedState:
+            return @"SJURLSessionOperationPausedState";
+            break;
+        case SJURLSessionOperationReadyState:
+            return @"SJURLSessionOperationReadyState";
+        default:
+            return nil;
+            break;
+    };
+    
+    return nil;
+}
+- (void)observeValueForKeyPath:(NSString *)keyPath
+                      ofObject:(id)object
+                        change:(NSDictionary *)change
+                       context:(void *)context
+{
+    if ([keyPath isEqualToString:@"state"]) {
+        // ...
+        NSLog(@"Operation state: %@",[self nameOfState:self.operation.state]);
+        
+        if ([self.operation isFinished]) {
+            
+            @try {
+                [object removeObserver:self forKeyPath:@"state"];
+            }
+            @catch (NSException * __unused exception) {}
+
+        }
+        
+    }
+    
 }
 
 #pragma mark - SJURLSessionOperation Blocks

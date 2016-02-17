@@ -106,7 +106,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property (readonly, nonatomic, strong) NSData *operationResumeData;
 
-@property (readonly, nonatomic, assign) SJURLSessionOperationState operationState;
+@property (readonly, nonatomic, assign) SJURLSessionOperationState state;
 
 ///--------------------
 /// @name Notifications
