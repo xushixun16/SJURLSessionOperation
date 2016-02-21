@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2015 Soneé Delano John https://twitter.com/Sonee_John
+Copyright (c) 2015 - 2016 Soneé Delano John https://twitter.com/Sonee_John
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,13 @@ SOFTWARE.
 
 #import <Foundation/Foundation.h>
 #import "AFNetworking/AFNetworking.h"
+
+typedef NS_ENUM(NSInteger, SJURLSessionOperationState) {
+    SJURLSessionOperationPausedState      = -1,
+    SJURLSessionOperationReadyState       = 1,
+    SJURLSessionOperationExecutingState   = 2,
+    SJURLSessionOperationFinishedState    = 3,
+};
 /**
  SJURLSessionOperation creates and manages an NSURLSessionDownloadTask object based on a specified request and download location. SJURLSessionOperation is a subclass of NSOperation which then can be used with a NSOperationQueue. In addition, it uses AFURLSessionManager so, it requires AFNetworking.
  
@@ -43,6 +50,9 @@ NS_ASSUME_NONNULL_BEGIN
  *  @return An initialized `SJURLSessionOperation` object.
  */
 - (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination NS_DESIGNATED_INITIALIZER;
+
+- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData;
+
 
 ///------------------------------------
 /// @name Pausing / Resuming Operations
@@ -94,7 +104,9 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The resume data for the operation. This value may be `nil`.
  */
-@property (strong, nonatomic) NSData *resumeData;
+@property (readonly, nonatomic, strong) NSData *operationResumeData;
+
+@property (readonly, nonatomic, assign) SJURLSessionOperationState state;
 
 ///--------------------
 /// @name Notifications
