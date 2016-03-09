@@ -1,5 +1,9 @@
 # SJURLSessionOperation
 
+![Version Status](https://img.shields.io/cocoapods/v/SJURLSessionOperation.svg) ![Platform Status](https://img.shields.io/cocoapods/p/SJURLSessionOperation.svg) 
+[![License Status](https://img.shields.io/cocoapods/l/SJURLSessionOperation.svg)](https://github.com/SoneeJohn/SJURLSessionOperation/blob/master/LICENSE)
+
+
 `SJURLSessionOperation` creates and manages an `NSURLSessionDownloadTask` object based on a specified request and download location. `SJURLSessionOperation` is a subclass of `NSOperation` which then can be used with a NSOperationQueue. In addition, it uses `AFURLSessionManager` so, it requires AFNetworking.
 
 ### Purpose of Class
