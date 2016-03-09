@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright (c) 2015 Soneé Delano John https://twitter.com/Sonee_John
+Copyright (c) 2015 - 2016 Soneé Delano John https://twitter.com/Sonee_John
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,13 @@ SOFTWARE.
 
 #import <Foundation/Foundation.h>
 #import "AFNetworking/AFNetworking.h"
+
+typedef NS_ENUM(NSInteger, SJURLSessionOperationState) {
+    SJURLSessionOperationPausedState      = -1,
+    SJURLSessionOperationReadyState       = 1,
+    SJURLSessionOperationExecutingState   = 2,
+    SJURLSessionOperationFinishedState    = 3,
+};
 /**
  SJURLSessionOperation creates and manages an NSURLSessionDownloadTask object based on a specified request and download location. SJURLSessionOperation is a subclass of NSOperation which then can be used with a NSOperationQueue. In addition, it uses AFURLSessionManager so, it requires AFNetworking.
  
@@ -37,12 +44,23 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Initializes and returns a newly allocated operation object with a url request and a destination to save the file.
  *
- *  @param urlRequest  The HTTP request for the request.
+ *  @param urlRequest  An NSURLRequest object that provides the URL, cache policy, request type, body data or body stream, and so on.
  *  @param destination The destination to save the downloaded file upon completion. During the download, the file will be stored in a temporary loction, and upon completion it will be moved to the specified destination. In additonal, the temporay file used during the download will be automatically deleted after being moved to the specified destination.
  *
- *  @return An initialized `SJURLSessionOperation` object.
+ *  @return The newly initialized `SJURLSessionOperation` object.
  */
 - (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination NS_DESIGNATED_INITIALIZER;
+/**
+ *  Initializes and returns a newly allocated operation object with a url request and a destination to save the file and resume data.
+ *
+ *  @param urlRequest          An NSURLRequest object that provides the URL, cache policy, request type, body data or body stream, and so on.
+ *  @param destination         The destination to save the downloaded file upon completion. During the download, the file will be stored in a temporary loction, and upon completion it will be moved to the specified destination. In additonal, the temporay file used during the download will be automatically deleted after being moved to the specified destination.
+ *  @param operationResumeData The resume data to start the operation with. For example, you may use the resume data from a operation that previously failed. By setting the resume data the operation will start where the previous operation failed.
+ *
+ *  @return The newly initialized `SJURLSessionOperation` object.
+ */
+- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData;
+
 
 ///------------------------------------
 /// @name Pausing / Resuming Operations
@@ -80,6 +98,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Sets a callback to be called when operation finishes.
  *
  *  @param block A block to be executed when a task finishes. This block has no return value and takes four arguments: the operation, the error describing the network or parsing error that occurred, if any, the path of the downloaded file, and the server response.
+ *  @note This block will be called on the main queue.
  */
 - (void)setDownloadCompletionBlock:(nullable void (^)(SJURLSessionOperation *_Nullable operation, NSError *_Nullable error, NSURL *_Nullable fileURL, NSURLResponse *_Nullable response))block;
 
@@ -88,9 +107,28 @@ NS_ASSUME_NONNULL_BEGIN
 ///-----------------------------------------
 
 /**
+ *  The original request object passed when the operation was created.
+ */
+@property (readonly, nonatomic, strong) NSURLRequest *urlRequest;
+/**
+ *  The original `NSURL` object passed when the operation was created.
+ */
+@property (readonly, nonatomic, strong) NSURL *destinationURL;
+
+/**
  The error, if any, that occurred in the lifecycle of the operation.
  */
 @property (readonly, nonatomic, strong, nullable) NSError *error;
+/**
+ *  The resume data for the operation. This value may be `nil`.
+ */
+@property (readonly, nonatomic, strong) NSData *operationResumeData;
+
+/**
+ *  The current state of the operation.
+ *  @see`SJURLSessionOperationState`
+ */
+@property (readonly, nonatomic, assign) SJURLSessionOperationState state;
 
 ///--------------------
 /// @name Notifications

@@ -1,7 +1,7 @@
 /*
  The MIT License (MIT)
  
- Copyright (c) 2015 Soneé Delano John https://twitter.com/Sonee_John
+ Copyright (c) 2015 - 2016 Soneé Delano John https://twitter.com/Sonee_John
  
  Permission is hereby granted, free of charge, to any person obtaining a copy
  of this software and associated documentation files (the "Software"), to deal
@@ -24,12 +24,6 @@
 
 #import "SJURLSessionOperation.h"
 
-typedef NS_ENUM(NSInteger, SJURLSessionOperationState) {
-    SJURLSessionOperationPausedState      = -1,
-    SJURLSessionOperationReadyState       = 1,
-    SJURLSessionOperationExecutingState   = 2,
-    SJURLSessionOperationFinishedState    = 3,
-};
 
 static inline NSString * SJKeyPathFromOperationState(SJURLSessionOperationState state) {
     switch (state) {
@@ -105,7 +99,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 @property (readwrite, nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
 
 @property (strong, nonatomic) AFURLSessionManager *manager;
-@property (strong, nonatomic) NSData *resumeData;
+
 
 @property (readwrite, nonatomic, strong) NSError *error;
 
@@ -113,7 +107,6 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 @property (readwrite, nonatomic, strong) NSURL *saveLocation;
 
-@property (readwrite, nonatomic, assign) SJURLSessionOperationState state;
 
 @property (readwrite, nonatomic, strong) NSRecursiveLock *lock;
 
@@ -133,15 +126,29 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     return nil;
 }
 
+- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData{
+    
+    self = [self initWithRequest:urlRequest targetLocation:destination];
+    
+    if (self) {
+        
+        _operationResumeData = operationResumeData;
+
+    }
+    
+    return self;
+}
+
+
 - (instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination{
     
     NSParameterAssert(urlRequest);
     NSParameterAssert(destination);
     
-    if (self == [super init]) {
-        if (!self) {
-            return nil;
-        }
+    self = [super init];
+    
+    if (self) {
+        
         
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     
@@ -151,6 +158,8 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
         
         self.saveLocation = destination;
         self.request = urlRequest;
+        _urlRequest = urlRequest;
+        _destinationURL = destination;
         
         [self registerCompletionBlock];
         [self registerDownloadTaskDidWriteDataBlock];
@@ -181,9 +190,12 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
                 }
             });
         }else{
+            
+            _operationResumeData = [error.userInfo objectForKey:@"NSURLSessionDownloadTaskResumeData"];
+            
             if(error.code == NSURLErrorCancelled){
                
-                if (_resumeData == nil) {
+                if (self.operationResumeData == nil) {
                     [self finish];
                     self.error = error;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -212,7 +224,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 -(void)registerResumeDataCompletionBlock{
     
-    self.downloadTask = [self.manager downloadTaskWithResumeData:_resumeData progress:nil destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
+    self.downloadTask = [self.manager downloadTaskWithResumeData:self.operationResumeData progress:nil destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
         return self.saveLocation;
     } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
         
@@ -226,9 +238,12 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
                 }
             });
         }else{
+            
+            _operationResumeData = [error.userInfo objectForKey:@"NSURLSessionDownloadTaskResumeData"];
+            
             if(error.code == NSURLErrorCancelled){
                 
-                if (_resumeData == nil) {
+                if (self.operationResumeData == nil) {
                     [self finish];
                     self.error = error;
                     dispatch_async(dispatch_get_main_queue(), ^{
@@ -335,7 +350,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
         if(self.downloadTask){
             
             [self.downloadTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
-                _resumeData = resumeData;
+                _operationResumeData = resumeData;
             }];
         
         dispatch_async(dispatch_get_main_queue(), ^{
@@ -379,7 +394,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
             [[NSNotificationCenter defaultCenter] postNotificationName:SJURLSessionOperationDidStartNotification object:self];
         });
         
-        if (_resumeData) {
+        if (self.operationResumeData) {
             
             [self registerResumeDataCompletionBlock];
         
@@ -396,7 +411,6 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 - (void)finish {
     
     [self.lock lock];
-    _resumeData = nil;
     self.state = SJURLSessionOperationFinishedState;
     [self.lock unlock];
     
