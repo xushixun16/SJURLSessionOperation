@@ -36,7 +36,7 @@
         
         NSURL *downloadURL = [NSURL URLWithString:self.urlTextField.stringValue];
         NSSavePanel *savePanel = [[NSSavePanel alloc]init];
-        [savePanel setNameFieldStringValue:[NSString stringWithFormat:@"File Name.%@",downloadURL.pathExtension]];
+        [savePanel setNameFieldStringValue:[NSString stringWithFormat:@"%@",downloadURL.lastPathComponent]];
         [savePanel setPrompt:@"Download"];
         
         NSInteger result = [savePanel runModal];
@@ -74,6 +74,20 @@
 - (IBAction)cancelAction:(id)sender {
     
     [self.operation cancel];
+}
+
+-(void)setupResumeOperationWithData:(NSData *)resumeData{
+    
+    self.operation = [[SJURLSessionOperation alloc]initWithRequest:self.operation.urlRequest targetLocation:self.operation.destinationURL resumeData:resumeData];
+    
+    //Set blocks
+    [self registerCompletionBlockForOperation:self.operation];
+    [self registerProgressBlockForOperation:self.operation];
+    
+    [self.operation addObserver:self forKeyPath:@"state" options:NSKeyValueObservingOptionNew | NSKeyValueObservingOptionInitial context:NULL];
+    
+    [self.operation start];
+
 }
 
 #pragma mark - Key-Value Observing (KVO)
@@ -130,8 +144,15 @@
         
         if (error) {
             
+            if (operation.operationResumeData) {
+                
+                [self performSelector:@selector(setupResumeOperationWithData:) withObject:operation.operationResumeData afterDelay:5];
+            }else{
+            
             if (error.code != NSURLErrorCancelled) {
                 [[NSAlert alertWithError:error]runModal];
+            }
+                
             }
             [self.progressLabel setStringValue:error.localizedDescription];
             [self.progressBar setDoubleValue:0];

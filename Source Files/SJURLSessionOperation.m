@@ -158,6 +158,8 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
         
         self.saveLocation = destination;
         self.request = urlRequest;
+        _urlRequest = urlRequest;
+        _destinationURL = destination;
         
         [self registerCompletionBlock];
         [self registerDownloadTaskDidWriteDataBlock];

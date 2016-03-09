@@ -107,6 +107,15 @@ NS_ASSUME_NONNULL_BEGIN
 ///-----------------------------------------
 
 /**
+ *  The original request object passed when the operation was created.
+ */
+@property (readonly, nonatomic, strong) NSURLRequest *urlRequest;
+/**
+ *  The original `NSURL` object passed when the operation was created.
+ */
+@property (readonly, nonatomic, strong) NSURL *destinationURL;
+
+/**
  The error, if any, that occurred in the lifecycle of the operation.
  */
 @property (readonly, nonatomic, strong, nullable) NSError *error;
