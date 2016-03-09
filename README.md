@@ -71,8 +71,7 @@ As of Xcode 7, the `NSURLConnection` API has been officially deprecated by Apple
        NSInteger percentage = (double)totalBytesWritten * 100 / (double)totalBytesExpectedToWrite;
 
 	}];
-
-
+```
 # Example Usage Case
 
 #### Limit the number of concurrent or simultaneous operations
