@@ -128,8 +128,15 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 - (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData{
     
-    _operationResumeData = operationResumeData;
-    return [self initWithRequest:urlRequest targetLocation:destination];
+    self = [self initWithRequest:urlRequest targetLocation:destination];
+    
+    if (self) {
+        
+        _operationResumeData = operationResumeData;
+
+    }
+    
+    return self;
 }
 
 
@@ -138,10 +145,10 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     NSParameterAssert(urlRequest);
     NSParameterAssert(destination);
     
-    if (self == [super init]) {
-        if (!self) {
-            return nil;
-        }
+    self = [super init];
+    
+    if (self) {
+        
         
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
     
