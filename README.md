@@ -105,7 +105,7 @@ queue.maxConcurrentOperationCount = 1; //limit it to one operation at a time
 
 ## Acknowledgments
 
-A lot of the source code in *SJURLSessionOperation* is inspired by the [AFNetworking ](https://github.com/AFNetworking/AFNetworking)
+A lot of the source code in *SJURLSessionOperation* is inspired by [AFNetworking ](https://github.com/AFNetworking/AFNetworking)
 
 ## Contact
 
