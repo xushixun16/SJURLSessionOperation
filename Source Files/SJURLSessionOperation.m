@@ -111,9 +111,10 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 @implementation SJURLSessionOperation
 
 #pragma mark -
-- (instancetype)init NS_UNAVAILABLE
-{
-    return nil;
+
+- (instancetype)init {
+    
+    return self;
 }
 
 - (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData{
