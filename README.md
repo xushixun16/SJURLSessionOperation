@@ -64,7 +64,7 @@ As of Xcode 7, the `NSURLConnection` API has been officially deprecated by Apple
 [operation setDownloadCompletionBlock:^(SJURLSessionOperation * _Nullable operation, NSError * _Nullable error, NSURL * _Nullable fileURL, NSURLResponse * _Nullable response) {
         
 	if (error) {
-	//Handler error
+	//Handle error
 	}else{
 	
 	//Operation finished successfully
@@ -105,7 +105,7 @@ queue.maxConcurrentOperationCount = 1; //limit it to one operation at a time
 
 ## Acknowledgments
 
-A lot of the source code in *SJURLSessionOperation* is inspired by the [AFNetworking ](https://github.com/AFNetworking/AFNetworking)
+A lot of the source code in *SJURLSessionOperation* is inspired by [AFNetworking ](https://github.com/AFNetworking/AFNetworking)
 
 ## Contact
 
