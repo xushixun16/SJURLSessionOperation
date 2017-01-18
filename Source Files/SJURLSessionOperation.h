@@ -39,6 +39,7 @@ NS_ASSUME_NONNULL_BEGIN
 ///---------------------------------------------------
 /// @name Initializing an SJURLSessionOperation Object
 ///---------------------------------------------------
+- (instancetype)init NS_UNAVAILABLE;
 
 /**
  *  Initializes and returns a newly allocated operation object with a url request and a destination to save the file.
