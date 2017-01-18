@@ -23,6 +23,7 @@
  */
 
 #import "SJURLSessionOperation.h"
+#import "AFNetworking/AFNetworking.h"
 
 
 static inline NSString * SJKeyPathFromOperationState(SJURLSessionOperationState state) {
