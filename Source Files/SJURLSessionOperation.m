@@ -147,7 +147,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 #pragma mark -
 
--(void)registerCompletionBlock {
+- (void)registerCompletionBlock {
     
     self.downloadTask = [self.manager downloadTaskWithRequest:self.request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
         return self.saveLocation;
@@ -198,7 +198,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     }];
 }
 
--(void)registerResumeDataCompletionBlock {
+- (void)registerResumeDataCompletionBlock {
     
     self.downloadTask = [self.manager downloadTaskWithResumeData:self.operationResumeData progress:nil destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
         return self.saveLocation;
@@ -252,7 +252,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     }
 }
 
--(void)registerDownloadTaskDidWriteDataBlock {
+- (void)registerDownloadTaskDidWriteDataBlock {
     
     __weak typeof(self) weakSelf = self;
     
@@ -299,7 +299,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 #pragma mark - NSOperation & Operation Control
 
--(void)resume {
+- (void)resume {
     
     if (![self isPaused]) {
         return;
@@ -313,7 +313,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     }
 }
 
--(void)pause {
+- (void)pause {
     
     if ([self isPaused] || [self isFinished] || [self isCancelled]) {
         return;
