@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return The newly initialized `SJURLSessionOperation` object.
  */
-- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *__nullable)operationResumeData NS_DESIGNATED_INITIALIZER;
 
 
 ///------------------------------------
