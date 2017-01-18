@@ -89,31 +89,20 @@ static inline BOOL SJStateTransitionIsValid(SJURLSessionOperationState fromState
 typedef void (^SJURLSessionOperationProgressBlock)(int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite);
 typedef void (^SJURLSessionOperationCompletionBlock)(SJURLSessionOperation *operation, NSError *error, NSURL *fileURL, NSURLResponse *response);
 
-
 NSString * const SJURLSessionOperationDidStartNotification = @"com.alphasoft.sjurlsession.operation.start";
 NSString * const SJURLSessionOperationDidFinishNotification = @"com.alphasoft.sjurlsession.operation.finish";
 static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlsession.operation.lock";
 
-
 @interface SJURLSessionOperation ()
 
 @property (readwrite, nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
-
 @property (strong, nonatomic) AFURLSessionManager *manager;
-
-
 @property (readwrite, nonatomic, strong) NSError *error;
-
 @property (readwrite, nonatomic, strong) NSURLRequest *request;
-
 @property (readwrite, nonatomic, strong) NSURL *saveLocation;
-
-
 @property (readwrite, nonatomic, strong) NSRecursiveLock *lock;
-
 @property (readwrite, nonatomic, copy) SJURLSessionOperationProgressBlock downloadProgress;
 @property (readwrite, nonatomic, copy) SJURLSessionOperationCompletionBlock completion;
-
 
 - (void)finish;
 
