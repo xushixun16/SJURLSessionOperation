@@ -49,7 +49,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return The newly initialized `SJURLSessionOperation` object.
  */
-- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination NS_DESIGNATED_INITIALIZER;
+- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination;
 /**
  *  Initializes and returns a newly allocated operation object with a url request and a destination to save the file and resume data.
  *
@@ -59,7 +59,7 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  @return The newly initialized `SJURLSessionOperation` object.
  */
-- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData;
+- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData NS_DESIGNATED_INITIALIZER;
 
 
 ///------------------------------------

@@ -112,21 +112,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
 
 #pragma mark -
 
-- (nullable instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData{
-    
-    self = [self initWithRequest:urlRequest targetLocation:destination];
-    
-    if (self) {
-        
-        _operationResumeData = operationResumeData;
-
-    }
-    
-    return self;
-}
-
-
-- (instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination{
+- (instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination resumeData:(NSData *)operationResumeData {
     
     NSParameterAssert(urlRequest);
     NSParameterAssert(destination);
@@ -135,27 +121,31 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     
     if (self) {
         
-        
         NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-    
+        
         _manager = [[AFURLSessionManager alloc]initWithSessionConfiguration:config];
-
+        
         _state = SJURLSessionOperationReadyState;
         
-        self.saveLocation = destination;
-        self.request = urlRequest;
+        _saveLocation = destination;
+        _request = urlRequest;
         _urlRequest = urlRequest;
         _destinationURL = destination;
+        _operationResumeData = operationResumeData;
+        
+        _lock = [[NSRecursiveLock alloc]init];
+        _lock.name = SJURLSessionOperationLockName;
         
         [self registerCompletionBlock];
         [self registerDownloadTaskDidWriteDataBlock];
-        
-        self.lock = [[NSRecursiveLock alloc]init];
-        self.lock.name = SJURLSessionOperationLockName;
-        
     }
     
     return self;
+}
+
+- (instancetype)initWithRequest:(NSURLRequest *)urlRequest targetLocation:(NSURL *)destination {
+    
+    return [self initWithRequest:urlRequest targetLocation:destination resumeData:nil];
 }
 
 #pragma mark -
