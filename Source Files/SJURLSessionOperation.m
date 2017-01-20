@@ -166,7 +166,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
         
         } else {
             
-            _operationResumeData = error.userInfo[@"NSURLSessionDownloadTaskResumeData"];
+            _operationResumeData = error.userInfo[NSURLSessionDownloadTaskResumeData];
             
             if (error.code == NSURLErrorCancelled) {
                
@@ -217,7 +217,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
         
         } else {
             
-            _operationResumeData = error.userInfo[@"NSURLSessionDownloadTaskResumeData"];
+            _operationResumeData = error.userInfo[NSURLSessionDownloadTaskResumeData];
             
             if (error.code == NSURLErrorCancelled) {
                 
