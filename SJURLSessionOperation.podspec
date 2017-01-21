@@ -12,7 +12,8 @@ DESC
   s.source                = { :git => "https://github.com/SoneeJohn/SJURLSessionOperation.git", :tag => s.version.to_s }
   s.ios.deployment_target = "7.0"
   s.osx.deployment_target = "10.9"
-   s.dependency 'AFNetworking', '~> 3.0'
-  s.source_files  = "Source Files/*.{h,m}"
+  s.dependency              'AFNetworking', '~> 3.0'
+  s.source_files          = "SJURLSessionKit/*.{h,m}"
+  s.public_header_files   = "SJURLSessionKit/SJURLSession{Kit,Operation}.h"
   s.requires_arc          = true
 end
