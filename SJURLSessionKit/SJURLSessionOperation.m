@@ -23,7 +23,6 @@
  */
 
 #import "SJURLSessionOperation.h"
-#import "AFNetworking/AFNetworking.h"
 
 static inline NSString * SJKeyPathFromOperationState(SJURLSessionOperationState state) {
     switch (state) {
@@ -92,11 +91,11 @@ NSString * const SJURLSessionOperationDidStartNotification = @"com.alphasoft.sju
 NSString * const SJURLSessionOperationDidFinishNotification = @"com.alphasoft.sjurlsession.operation.finish";
 static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlsession.operation.lock";
 
-@interface SJURLSessionOperation ()
+@interface SJURLSessionOperation () <NSURLSessionDownloadDelegate>
 
 @property (readwrite, nonatomic, strong) NSURLSessionDownloadTask *downloadTask;
-@property (strong, nonatomic) AFURLSessionManager *manager;
 @property (readwrite, nonatomic, strong) NSError *error;
+@property (readwrite, nonatomic, strong) NSURLSession *session;
 @property (readwrite, nonatomic, strong) NSURLRequest *request;
 @property (readwrite, nonatomic, strong) NSURL *saveLocation;
 @property (readwrite, nonatomic, strong) NSRecursiveLock *lock;
@@ -118,12 +117,9 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     
     if (self) {
         
-        NSURLSessionConfiguration *config = [NSURLSessionConfiguration defaultSessionConfiguration];
-        
-        _manager = [[AFURLSessionManager alloc]initWithSessionConfiguration:config];
-        
+        _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
+        _downloadTask = [_session downloadTaskWithRequest:urlRequest];
         _state = SJURLSessionOperationReadyState;
-        
         _saveLocation = destination;
         _request = urlRequest;
         _urlRequest = urlRequest;
@@ -132,9 +128,6 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
         
         _lock = [[NSRecursiveLock alloc]init];
         _lock.name = SJURLSessionOperationLockName;
-        
-        [self registerCompletionBlock];
-        [self registerDownloadTaskDidWriteDataBlock];
     }
     
     return self;
@@ -145,126 +138,46 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     return [self initWithRequest:urlRequest targetLocation:destination resumeData:nil];
 }
 
-#pragma mark -
+#pragma mark - NSURLSessionDownloadDelegate
 
-- (void)registerCompletionBlock {
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(NSURL *)location {
     
-    self.downloadTask = [self.manager downloadTaskWithRequest:self.request progress:nil destination:^NSURL *(NSURL *targetPath, NSURLResponse *response) {
-        return self.saveLocation;
+    NSError *error = nil;
+    
+    if (![[NSFileManager defaultManager]copyItemAtURL:location toURL:self.destinationURL error:&error]) {
         
-    } completionHandler:^(NSURLResponse *response, NSURL *filePath, NSError *error) {
-       
-        if (error == nil) {
-           
-            [self finish];
-            self.error = error;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (self.completion) {
-                    self.completion(self, error, filePath, response);
-                }
-            });
-        
-        } else {
+        if (error) {
             
-            _operationResumeData = error.userInfo[NSURLSessionDownloadTaskResumeData];
+            [self finishWithError:error resumeData:downloadTask.error.userInfo[NSURLSessionDownloadTaskResumeData]];
             
-            if (error.code == NSURLErrorCancelled) {
-               
-                if (self.operationResumeData == nil) {
-                    
-                    [self finish];
-                    self.error = error;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (self.completion) {
-                            self.completion(self, error, filePath, response);
-                        }
-                    });
-
-                }
-                
-            } else {
-                
-                [self finish];
-                self.error = error;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (self.completion) {
-                        self.completion(self, error, filePath, response);
-                    }
-                });
-                
+            if (self.completion) {
+                self.completion(self, error, self.destinationURL, downloadTask.response);
             }
         }
-        
-    }];
-}
-
-- (void)registerResumeDataCompletionBlock {
+        return;
+    }
     
-    self.downloadTask = [self.manager downloadTaskWithResumeData:self.operationResumeData progress:nil destination:^NSURL * _Nonnull(NSURL * _Nonnull targetPath, NSURLResponse * _Nonnull response) {
-        return self.saveLocation;
+    [self finish];
     
-    } completionHandler:^(NSURLResponse * _Nonnull response, NSURL * _Nullable filePath, NSError * _Nullable error) {
-        
-        if (error == nil) {
-            
-            [self finish];
-            self.error = error;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                if (self.completion) {
-                    self.completion(self, error, filePath, response);
-                }
-            });
-        
-        } else {
-            
-            _operationResumeData = error.userInfo[NSURLSessionDownloadTaskResumeData];
-            
-            if (error.code == NSURLErrorCancelled) {
-                
-                if (self.operationResumeData == nil) {
-                    
-                    [self finish];
-                    self.error = error;
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        if (self.completion) {
-                            self.completion(self, error, filePath, response);
-                        }
-                    });
-                    
-                }
-                
-            } else {
-                
-                [self finish];
-                self.error = error;
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if (self.completion) {
-                        self.completion(self, error, filePath, response);
-                    }
-                });
-                
-            }
-        }
-    }];
-    
-    if (self.downloadTask) {
-        [self.downloadTask resume];
+    if (self.completion) {
+        self.completion(self, error, nil, downloadTask.response);
     }
 }
 
-- (void)registerDownloadTaskDidWriteDataBlock {
+- (void)URLSession:(NSURLSession *)session task:(NSURLSessionTask *)task didCompleteWithError:(NSError *)error {
     
-    __weak typeof(self) weakSelf = self;
+    [self finishWithError:error resumeData:task.error.userInfo[NSURLSessionDownloadTaskResumeData]];
     
-    [self.manager setDownloadTaskDidWriteDataBlock:^(NSURLSession * _Nonnull session, NSURLSessionDownloadTask * _Nonnull downloadTask, int64_t bytesWritten, int64_t totalBytesWritten, int64_t totalBytesExpectedToWrite) {
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            if (weakSelf.downloadProgress) {
-                weakSelf.downloadProgress (bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
-            }
-        });
-        
-    }];
+    if (self.completion) {
+        self.completion(self, error, nil, task.response);
+    }
+}
+
+- (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
+
+    if (self.downloadProgress) {
+        self.downloadProgress(bytesWritten, totalBytesWritten, totalBytesExpectedToWrite);
+    }
 }
 
 #pragma mark -
@@ -371,17 +284,20 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
         });
         
         if (self.operationResumeData) {
-            
-            [self registerResumeDataCompletionBlock];
-        
-        }else{
-         
-         [self.downloadTask resume];
-            
+            self.downloadTask = [self.session downloadTaskWithResumeData:self.operationResumeData];
         }
+        
+        [self.downloadTask resume];
     }
     
     [self.lock unlock];
+}
+
+- (void)finishWithError:(NSError *)error resumeData:(NSData *)resumeData {
+    
+    self.error = error;
+    _operationResumeData = resumeData;
+    [self finish];
 }
 
 - (void)finish {

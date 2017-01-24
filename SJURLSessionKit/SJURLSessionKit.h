@@ -6,7 +6,7 @@
 //  Copyright © 2017 AlphaSoft. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
+#import <Foundation/Foundation.h>
 
 //! Project version number for SJURLSessionKit.
 FOUNDATION_EXPORT double SJURLSessionKitVersionNumber;

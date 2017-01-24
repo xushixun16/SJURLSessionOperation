@@ -12,7 +12,8 @@
 		016E80BF1C738EC400BD0EAE /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 016E80BE1C738EC400BD0EAE /* ViewController.m */; };
 		016E80C11C738EC400BD0EAE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 016E80C01C738EC400BD0EAE /* Assets.xcassets */; };
 		016E80C41C738EC400BD0EAE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 016E80C21C738EC400BD0EAE /* Main.storyboard */; };
-		016F1F781C794036002F2A1F /* SJURLSessionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 016F1F771C794036002F2A1F /* SJURLSessionOperation.m */; };
+		0193DF801E37DF7000A90874 /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 0193DF7C1E37DF7000A90874 /* Info.plist */; };
+		0193DF811E37DF7000A90874 /* SJURLSessionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0193DF7F1E37DF7000A90874 /* SJURLSessionOperation.m */; };
 		7CD8B369D5020C97DAF6B343 /* libPods-SJURLSessionOperation Demo.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A77DCE390B8249912EA9D014 /* libPods-SJURLSessionOperation Demo.a */; };
 /* End PBXBuildFile section */
 
@@ -26,8 +27,10 @@
 		016E80C01C738EC400BD0EAE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		016E80C31C738EC400BD0EAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		016E80C51C738EC400BD0EAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		016F1F761C794036002F2A1F /* SJURLSessionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJURLSessionOperation.h; sourceTree = "<group>"; };
-		016F1F771C794036002F2A1F /* SJURLSessionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJURLSessionOperation.m; sourceTree = "<group>"; };
+		0193DF7C1E37DF7000A90874 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0193DF7D1E37DF7000A90874 /* SJURLSessionKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJURLSessionKit.h; sourceTree = "<group>"; };
+		0193DF7E1E37DF7000A90874 /* SJURLSessionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJURLSessionOperation.h; sourceTree = "<group>"; };
+		0193DF7F1E37DF7000A90874 /* SJURLSessionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJURLSessionOperation.m; sourceTree = "<group>"; };
 		1734B3039532125D35547E15 /* Pods-SJURLSessionOperation Demo.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJURLSessionOperation Demo.release.xcconfig"; path = "Pods/Target Support Files/Pods-SJURLSessionOperation Demo/Pods-SJURLSessionOperation Demo.release.xcconfig"; sourceTree = "<group>"; };
 		517C2203C7FDDDCB7AA1EA99 /* Pods-SJURLSessionOperation Demo.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJURLSessionOperation Demo.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SJURLSessionOperation Demo/Pods-SJURLSessionOperation Demo.debug.xcconfig"; sourceTree = "<group>"; };
 		A77DCE390B8249912EA9D014 /* libPods-SJURLSessionOperation Demo.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SJURLSessionOperation Demo.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -48,6 +51,7 @@
 		016E80AB1C738EC400BD0EAE = {
 			isa = PBXGroup;
 			children = (
+				0193DF7B1E37DF7000A90874 /* SJURLSessionKit */,
 				016E80B61C738EC400BD0EAE /* SJURLSessionOperation Demo */,
 				016E80B51C738EC400BD0EAE /* Products */,
 				503E412824D6FF03998F1478 /* Pods */,
@@ -66,7 +70,6 @@
 		016E80B61C738EC400BD0EAE /* SJURLSessionOperation Demo */ = {
 			isa = PBXGroup;
 			children = (
-				016F1F751C794036002F2A1F /* Source Files */,
 				016E80B71C738EC400BD0EAE /* AppDelegate.h */,
 				016E80B81C738EC400BD0EAE /* AppDelegate.m */,
 				016E80BD1C738EC400BD0EAE /* ViewController.h */,
@@ -87,14 +90,16 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		016F1F751C794036002F2A1F /* Source Files */ = {
+		0193DF7B1E37DF7000A90874 /* SJURLSessionKit */ = {
 			isa = PBXGroup;
 			children = (
-				016F1F761C794036002F2A1F /* SJURLSessionOperation.h */,
-				016F1F771C794036002F2A1F /* SJURLSessionOperation.m */,
+				0193DF7C1E37DF7000A90874 /* Info.plist */,
+				0193DF7D1E37DF7000A90874 /* SJURLSessionKit.h */,
+				0193DF7E1E37DF7000A90874 /* SJURLSessionOperation.h */,
+				0193DF7F1E37DF7000A90874 /* SJURLSessionOperation.m */,
 			);
-			name = "Source Files";
-			path = "../../Source Files";
+			name = SJURLSessionKit;
+			path = ../SJURLSessionKit;
 			sourceTree = "<group>";
 		};
 		503E412824D6FF03998F1478 /* Pods */ = {
@@ -176,6 +181,7 @@
 			files = (
 				016E80C11C738EC400BD0EAE /* Assets.xcassets in Resources */,
 				016E80C41C738EC400BD0EAE /* Main.storyboard in Resources */,
+				0193DF801E37DF7000A90874 /* Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -237,7 +243,7 @@
 				016E80BF1C738EC400BD0EAE /* ViewController.m in Sources */,
 				016E80BC1C738EC400BD0EAE /* main.m in Sources */,
 				016E80B91C738EC400BD0EAE /* AppDelegate.m in Sources */,
-				016F1F781C794036002F2A1F /* SJURLSessionOperation.m in Sources */,
+				0193DF811E37DF7000A90874 /* SJURLSessionOperation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
