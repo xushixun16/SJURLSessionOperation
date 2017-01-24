@@ -1,18 +1,18 @@
 //
-//  SJURLSessionKitTests.m
-//  SJURLSessionKitTests
+//  SJURLSessionOperationTests.m
+//  SJURLSessionKit
 //
-//  Created by Soneé John on 1/21/17.
+//  Created by Soneé John on 1/24/17.
 //  Copyright © 2017 AlphaSoft. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>
 
-@interface SJURLSessionKitTests : XCTestCase
+@interface SJURLSessionOperationTests : XCTestCase
 
 @end
 
-@implementation SJURLSessionKitTests
+@implementation SJURLSessionOperationTests
 
 - (void)setUp {
     [super setUp];
@@ -23,6 +23,7 @@
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     [super tearDown];
 }
+
 
 
 @end

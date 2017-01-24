@@ -12,6 +12,7 @@
 		012375C71E3422CA00C28215 /* SJURLSessionKit.h in Headers */ = {isa = PBXBuildFile; fileRef = 012375B91E3422CA00C28215 /* SJURLSessionKit.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		01486EFD1E34278000E0DFA4 /* SJURLSessionOperation.h in Headers */ = {isa = PBXBuildFile; fileRef = 01486EFB1E34278000E0DFA4 /* SJURLSessionOperation.h */; };
 		01486EFE1E34278000E0DFA4 /* SJURLSessionOperation.m in Sources */ = {isa = PBXBuildFile; fileRef = 01486EFC1E34278000E0DFA4 /* SJURLSessionOperation.m */; };
+		0193DF831E38177100A90874 /* SJURLSessionOperationTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 0193DF821E38177100A90874 /* SJURLSessionOperationTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -33,6 +34,7 @@
 		012375C61E3422CA00C28215 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		01486EFB1E34278000E0DFA4 /* SJURLSessionOperation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SJURLSessionOperation.h; sourceTree = "<group>"; };
 		01486EFC1E34278000E0DFA4 /* SJURLSessionOperation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJURLSessionOperation.m; sourceTree = "<group>"; };
+		0193DF821E38177100A90874 /* SJURLSessionOperationTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SJURLSessionOperationTests.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				012375C41E3422CA00C28215 /* SJURLSessionKitTests.m */,
+				0193DF821E38177100A90874 /* SJURLSessionOperationTests.m */,
 				012375C61E3422CA00C28215 /* Info.plist */,
 			);
 			path = SJURLSessionKitTests;
@@ -211,6 +214,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				012375C51E3422CA00C28215 /* SJURLSessionKitTests.m in Sources */,
+				0193DF831E38177100A90874 /* SJURLSessionOperationTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
