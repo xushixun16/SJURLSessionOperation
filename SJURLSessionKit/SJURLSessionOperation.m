@@ -151,7 +151,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
             [self finishWithError:error resumeData:downloadTask.error.userInfo[NSURLSessionDownloadTaskResumeData]];
             
             if (self.completion) {
-                self.completion(self, error, self.destinationURL, downloadTask.response);
+                self.completion(self, error, nil, downloadTask.response);
             }
         }
         return;
@@ -160,7 +160,7 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     [self finish];
     
     if (self.completion) {
-        self.completion(self, error, nil, downloadTask.response);
+        self.completion(self, error, self.destinationURL, downloadTask.response);
     }
 }
 
