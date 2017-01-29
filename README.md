@@ -1,5 +1,7 @@
 # SJURLSessionOperation
 
+[![codecov](https://codecov.io/gh/SoneeJohn/SJURLSessionOperation/branch/master/graph/badge.svg)](https://codecov.io/gh/SoneeJohn/SJURLSessionOperation)
+[![Build Status](https://travis-ci.org/SoneeJohn/SJURLSessionOperation.svg?branch=master)](https://travis-ci.org/SoneeJohn/SJURLSessionOperation)
 [![Version Status](https://img.shields.io/cocoapods/v/SJURLSessionOperation.svg)](https://github.com/SoneeJohn/SJURLSessionOperation/releases)
 [![Platform Status](https://img.shields.io/cocoapods/p/SJURLSessionOperation.svg)](http://cocoadocs.org/docsets/SJURLSessionOperation) 
 [![License Status](https://img.shields.io/cocoapods/l/SJURLSessionOperation.svg)](https://github.com/SoneeJohn/SJURLSessionOperation/blob/master/LICENSE)
