@@ -1,0 +1,15 @@
+codecov:
+  branch: master
+comment:
+  layout: "header, diff, tree, changes, sunburst"
+  behavior: default
+  require_changes: true  # if true: only post the comment if coverage changes
+  branches: null
+  flags: null
+  paths: null
+
+coverage:
+  precision: 1
+  round: nearest
+  ignore:
+    - "SJURLSessionKitTests"
