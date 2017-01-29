@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import <SJURLSessionKit/SJURLSessionOperation.h>
 
 //! Project version number for SJURLSessionKit.
 FOUNDATION_EXPORT double SJURLSessionKitVersionNumber;

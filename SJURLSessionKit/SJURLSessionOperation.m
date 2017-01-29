@@ -118,7 +118,6 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     if (self) {
         
         _session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration defaultSessionConfiguration] delegate:self delegateQueue:[NSOperationQueue mainQueue]];
-        _downloadTask = [_session downloadTaskWithRequest:urlRequest];
         _state = SJURLSessionOperationReadyState;
         _saveLocation = destination;
         _request = urlRequest;
@@ -285,6 +284,10 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
         
         if (self.operationResumeData) {
             self.downloadTask = [self.session downloadTaskWithResumeData:self.operationResumeData];
+        }
+        
+        if (!self.downloadTask) {
+             self.downloadTask = [self.session downloadTaskWithRequest:self.urlRequest];
         }
         
         [self.downloadTask resume];
