@@ -13,7 +13,7 @@
 
 @end
 
-NSString * const SJURLSessionOperationTestsDownloadURL = @"https://www.dropbox.com/home/Public";
+NSString * const SJURLSessionOperationTestsDownloadURL = @"https://dl.dropboxusercontent.com/u/417623669/Apple%20%E2%80%93%20Introducing%20AirPods.mp4";
 @implementation SJURLSessionOperationTests
 
 - (void)setUp {
