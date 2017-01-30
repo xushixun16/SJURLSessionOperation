@@ -13,6 +13,7 @@
 
 @end
 
+NSString * const SJURLSessionOperationTestsDownloadURL = @"https://www.dropbox.com/home/Public";
 @implementation SJURLSessionOperationTests
 
 - (void)setUp {
@@ -94,6 +95,43 @@
     //Eval
     
     XCTAssertNoThrow([[SJURLSessionOperation alloc]initWithRequest:urlRequest targetLocation:targetLocation resumeData:resumeData], @"Operation should not throw an execption when `operationResumeData` is nil.");
+}
+
+#pragma mark - Download
+
+- (void)testThatItDownloadsSuccessfully {
+    
+    __block XCTestExpectation *expectation = [self expectationWithDescription:@""];
+    
+    //Given these parms
+    
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:SJURLSessionOperationTestsDownloadURL]];
+    NSURL *targetLocation = [NSURL fileURLWithPath:[[NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString] stringByAppendingPathExtension:SJURLSessionOperationTestsDownloadURL.pathExtension]];
+    
+    SJURLSessionOperation *operation = [[SJURLSessionOperation alloc]initWithRequest:urlRequest targetLocation:targetLocation];
+    
+    [operation setDownloadCompletionBlock:^(SJURLSessionOperation * _Nullable operation, NSError * _Nullable error, NSURL * _Nullable fileURL, NSURLResponse * _Nullable response) {
+        
+        XCTAssertNotNil(operation);
+        XCTAssertNil(error);
+        XCTAssertNil(operation.error);
+        XCTAssertNotNil(fileURL);
+        XCTAssertNotNil(operation.destinationURL);
+        XCTAssertEqualObjects(targetLocation, fileURL);
+        XCTAssertEqualObjects(targetLocation, operation.destinationURL);
+        XCTAssertTrue([[NSFileManager defaultManager]fileExistsAtPath:fileURL.path]);
+        XCTAssertTrue([[NSFileManager defaultManager]fileExistsAtPath:operation.destinationURL.path]);
+        XCTAssertNotNil(response);
+        
+        [[NSFileManager defaultManager]removeItemAtURL:targetLocation error:nil];
+        [expectation fulfill];
+        
+    
+    }];
+    
+    [operation start];
+    
+    [self waitForExpectationsWithTimeout:60 handler:nil];
 }
 
 @end
