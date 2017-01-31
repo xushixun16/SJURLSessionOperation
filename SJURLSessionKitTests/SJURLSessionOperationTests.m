@@ -131,7 +131,88 @@ NSString * const SJURLSessionOperationTestsDownloadURL = @"https://dl.dropboxuse
     
     [operation start];
     
-    [self waitForExpectationsWithTimeout:60 handler:nil];
+    [self waitForExpectationsWithTimeout:500 handler:nil];
 }
+
+#pragma mark - Operation Control
+
+- (void)testThatItResumesFromPausedState {
+    
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:SJURLSessionOperationTestsDownloadURL]];
+    NSURL *targetLocation = [NSURL fileURLWithPath:[[NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString] stringByAppendingPathExtension:SJURLSessionOperationTestsDownloadURL.pathExtension]];
+    
+    SJURLSessionOperation *operation = [[SJURLSessionOperation alloc]initWithRequest:urlRequest targetLocation:targetLocation];
+    
+    [operation start];
+    
+    sleep(5);
+    
+    [operation pause];
+    
+    sleep(5);
+    
+    [operation resume];
+    
+    XCTAssertTrue(operation.isExecuting);
+    XCTAssertTrue(operation.state == SJURLSessionOperationExecutingState);
+}
+
+- (void)testThatItDoesNotResumeFromNonPausedState {
+    
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:SJURLSessionOperationTestsDownloadURL]];
+    NSURL *targetLocation = [NSURL fileURLWithPath:[[NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString] stringByAppendingPathExtension:SJURLSessionOperationTestsDownloadURL.pathExtension]];
+    
+    SJURLSessionOperation *operation = [[SJURLSessionOperation alloc]initWithRequest:urlRequest targetLocation:targetLocation];
+    
+    [operation start];
+    
+    sleep(5);
+    
+    [operation resume];
+    
+    XCTAssertTrue(operation.isExecuting);
+    XCTAssertTrue(operation.state == SJURLSessionOperationExecutingState);
+}
+
+- (void)testThatItPausesFromExecutingState {
+    
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:SJURLSessionOperationTestsDownloadURL]];
+    NSURL *targetLocation = [NSURL fileURLWithPath:[[NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString] stringByAppendingPathExtension:SJURLSessionOperationTestsDownloadURL.pathExtension]];
+    
+    SJURLSessionOperation *operation = [[SJURLSessionOperation alloc]initWithRequest:urlRequest targetLocation:targetLocation];
+    
+    [operation start];
+    
+    sleep(5);
+    
+    [operation pause];
+    
+    XCTAssertTrue(operation.isPaused);
+}
+
+- (void)testThatItDoesNotPauseFromFinishedState {
+    
+    __block XCTestExpectation *expectation = [self expectationWithDescription:@""];
+    
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:SJURLSessionOperationTestsDownloadURL]];
+    NSURL *targetLocation = [NSURL fileURLWithPath:[[NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString] stringByAppendingPathExtension:SJURLSessionOperationTestsDownloadURL.pathExtension]];
+    
+    SJURLSessionOperation *operation = [[SJURLSessionOperation alloc]initWithRequest:urlRequest targetLocation:targetLocation];
+    
+     [operation setDownloadCompletionBlock:^(SJURLSessionOperation * _Nullable operation, NSError * _Nullable error, NSURL * _Nullable fileURL, NSURLResponse * _Nullable response) {
+         
+         
+         XCTAssertNil(error);
+         [operation pause];
+         XCTAssertFalse(operation.isPaused);
+         [expectation fulfill];
+     }];
+    
+    [operation start];
+    
+    [self waitForExpectationsWithTimeout:500 handler:nil];
+ 
+}
+
 
 @end
