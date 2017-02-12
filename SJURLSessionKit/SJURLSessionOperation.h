@@ -122,7 +122,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The resume data for the operation. This value may be `nil`.
  */
-@property (readonly, nonatomic, strong) NSData *operationResumeData;
+@property (readonly, nonatomic, strong, nullable) NSData *operationResumeData;
 
 /**
  *  The current state of the operation.
