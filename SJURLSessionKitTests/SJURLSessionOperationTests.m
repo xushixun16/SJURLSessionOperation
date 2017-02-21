@@ -123,10 +123,12 @@ NSString * const SJURLSessionOperationTestsDownloadURL = @"https://dl.dropboxuse
         XCTAssertTrue([[NSFileManager defaultManager]fileExistsAtPath:operation.destinationURL.path]);
         XCTAssertNotNil(response);
         
-        [[NSFileManager defaultManager]removeItemAtURL:targetLocation error:nil];
-        [expectation fulfill];
-        
-    
+        static dispatch_once_t onceToken;
+        dispatch_once(&onceToken, ^{
+            [[NSFileManager defaultManager]removeItemAtURL:targetLocation error:nil];
+            [expectation fulfill];
+        });
+      
     }];
     
     [operation start];
@@ -211,7 +213,6 @@ NSString * const SJURLSessionOperationTestsDownloadURL = @"https://dl.dropboxuse
     [operation start];
     
     [self waitForExpectationsWithTimeout:500 handler:nil];
- 
 }
 
 
