@@ -207,7 +207,10 @@ NSString * const SJURLSessionOperationTestsDownloadURL = @"https://dl.dropboxuse
          XCTAssertNil(error);
          [operation pause];
          XCTAssertFalse(operation.isPaused);
-         [expectation fulfill];
+         static dispatch_once_t onceToken;
+         dispatch_once(&onceToken, ^{
+             [expectation fulfill];
+         });
      }];
     
     [operation start];
