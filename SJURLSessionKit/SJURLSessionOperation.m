@@ -335,4 +335,25 @@ static NSString * const SJURLSessionOperationLockName = @"com.alphasoft.sjurlses
     return YES;
 }
 
+#pragma mark - Private Helper Methods 
+
++ (NSDictionary <id, NSString *> *)operationStateNames {
+    
+    return @{@(SJURLSessionOperationReadyState): @"SJURLSessionOperationReadyState",
+           @(SJURLSessionOperationExecutingState):@"SJURLSessionOperationExecutingState",
+           @(SJURLSessionOperationFinishedState):@"SJURLSessionOperationFinishedState",
+           @(SJURLSessionOperationPausedState):@"SJURLSessionOperationPausedState"
+           };
+}
+
+#pragma mark - NSObject 
+
+- (NSString *)description {
+    return [NSString stringWithFormat:@"< %@: %p | Destination URL: %@>",[self className],self, self.destinationURL];
+}
+
+- (NSString *)debugDescription {
+    return [NSString stringWithFormat:@"%@ | State: %@", self.description, [[self class] operationStateNames][@(self.state)]];
+}
+
 @end

@@ -218,5 +218,29 @@ NSString * const SJURLSessionOperationTestsDownloadURL = @"https://dl.dropboxuse
     [self waitForExpectationsWithTimeout:500 handler:nil];
 }
 
+- (void)testThatItReturnsCustomDescription {
+    
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:SJURLSessionOperationTestsDownloadURL]];
+    NSURL *targetLocation = [NSURL fileURLWithPath:[[NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString] stringByAppendingPathExtension:SJURLSessionOperationTestsDownloadURL.pathExtension]];
+    
+    SJURLSessionOperation *operation = [[SJURLSessionOperation alloc]initWithRequest:urlRequest targetLocation:targetLocation];
+    
+    NSString *testString = [NSString stringWithFormat:@"< %@: %p | Destination URL: %@>",[operation className], operation, operation.destinationURL];
+    XCTAssertNotNil(operation.description);
+    XCTAssertEqualObjects(operation.description, testString);
+}
+
+- (void)testThatItReturnsDebugDescription {
+    
+    NSURLRequest *urlRequest = [NSURLRequest requestWithURL:[NSURL URLWithString:SJURLSessionOperationTestsDownloadURL]];
+    NSURL *targetLocation = [NSURL fileURLWithPath:[[NSTemporaryDirectory() stringByAppendingPathComponent:[NSProcessInfo processInfo].globallyUniqueString] stringByAppendingPathExtension:SJURLSessionOperationTestsDownloadURL.pathExtension]];
+    
+    SJURLSessionOperation *operation = [[SJURLSessionOperation alloc]initWithRequest:urlRequest targetLocation:targetLocation];
+    
+    NSString *testString = [NSString stringWithFormat:@"%@ | State: SJURLSessionOperationReadyState", operation.description];
+    XCTAssertNotNil(operation.debugDescription);
+    XCTAssertEqualObjects(operation.debugDescription, testString);
+}
+
 
 @end
